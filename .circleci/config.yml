@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  build:
+    environment:
+      JVM_OPTS: "-Xmx3200m"
+      TERM: dumb
+    parallelism: 1
+    working_directory: ~/pycharm-plugin
+    docker:
+      - image: circleci/openjdk:10-jdk-node-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - 'gradle-{{ checksum "build.gradle" }}'
+      - run:
+          name: "Python: compile demistomock.py with both Python 2 and 3 to check for dual compatibility"
+          command: |
+            python2 ./src/main/resources/META-INF/demistomock.py
+            python3 ./src/main/resources/META-INF/demistomock.py
+      - run:
+          name: Build gradle
+          command: |
+            gradle assemble
+      - run:
+          name: Run tests
+          command: |
+            gradle test
+            gradle integrationTest
+      - save_cache:
+          paths:
+            - ~/pycharm-plugin/.gradle
+          key: 'gradle-{{ checksum "build.gradle" }}'
+      - store_artifacts:
+          path: build/distributions
+          destination: distributions
+      - store_artifacts:
+          path: build/libs
+          destination: libs
