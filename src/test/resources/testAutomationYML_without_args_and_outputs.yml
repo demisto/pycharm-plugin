@@ -1,0 +1,30 @@
+commonfields:
+  id: test
+  version: 2
+rolename: []
+name: testYML_with_args_and_outputs
+script: |2-
+
+
+  demisto.log('Test')
+  createRecordArgs = {
+    'applicationId': 433,
+    'fieldsToValues': {
+    }
+  }
+  test = "test"
+  keysToChange = {
+    'title': 'Title',
+    'incidentBackground': 'Incident Background',
+  }
+  demisto.executeCommand()
+type: python
+tags:
+- infra
+- server
+comment: test yaml
+enabled: true
+args:
+outputs:
+scripttarget: 0
+runonce: false

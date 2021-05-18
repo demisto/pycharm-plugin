@@ -1,0 +1,59 @@
+<idea-plugin>
+    <name>Demisto Add-on for PyCharm</name>
+    <id>com.demisto.demisto-plugin</id>
+    <description>
+        <![CDATA[
+            <p>Demisto is a Security Orchestration, Automation, and Response (SOAR) platform that helps security teams coordinate and automate tasks across 100s of partner products through task-based playbooks.</p>
+            <p>The Demisto Add-on for PyCharm simplifies third-party integration and script development by enabling users to author Python content for Demisto directly in PyCharm.</p>
+            <p>Features:</p>
+            <ul>
+            <li><strong>Leverage PyCharm capabilities: </strong>Take advantage of smart code completion, error highlighting, and quick navigation to accelerate development of third-party integrations and scripts in Demisto.</li>
+            <li><strong>Console flexibility: </strong>Choose between running scripts locally in PyCharm or running them in Demisto and having the results display in PyCharm.</li>
+            <li><strong>End-to-end development: </strong>Create new Python/YML files, edit existing files, and export files to Demisto. </li>
+            <li><strong>Remote execution:</strong> Execute Demisto integration/automation commands in PyCharm and have results display in PyCharm. </li>
+            </ul>
+        ]]>
+    </description>
+    <vendor email="support@demisto.com" url="http://www.demisto.com">Demisto</vendor>
+    <depends>com.intellij.modules.lang</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Demisto Settings"
+                    anchor="right"
+                    secondary="false"
+                    factoryClass="com.demisto.plugin.ide.DemistoSettingsToolWindowFactory"
+                    icon="/icons/demisto_icon.png"
+        />
+        <projectConfigurable groupId="tools" displayName="Demisto Plugin Setup" id="preferences.DemistoSetupConfigurable" instance="com.demisto.plugin.ide.plugin_settings_setup.DemistoSetupConfigurable" />
+        <projectService serviceImplementation="com.demisto.plugin.ide.plugin_settings_setup.DemistoSetupConfig"/>
+    </extensions>
+    <application-components>
+        <component>
+            <implementation-class>com.demisto.plugin.ide.DemistoUserPreferences</implementation-class>
+        </component>
+    </application-components>
+    <actions>
+        <action id="exportToDemistoFile" class="com.demisto.plugin.ide.actions.ExportToDemisto" text="Export to Demisto"
+                description="Export current script to a Demisto" icon="/icons/export-to-demisto.svg">
+            <add-to-group group-id="ToolbarRunGroup" anchor="first"/>
+        </action>
+        <action id="createPythonFileFromYML" class="com.demisto.plugin.ide.actions.CreateDemistoFileFromYML" text="Create Demisto Python"
+                description="Creates Python file for current configuration" icon="/icons/create-demisto-python.svg">
+            <add-to-group group-id="ToolbarRunGroup" anchor="after" relative-to-action="exportToDemistoFile"/>
+        </action>
+        <action id="runAutomationInDemisto" class="com.demisto.plugin.ide.actions.DemistoAutomationRunner" text="Run Automation in Demisto"
+                description="Run automation in Demisto" icon="/icons/run-demisto.svg" popup="true">
+        </action>
+        <action id="newDemistoAutomationFile" class="com.demisto.plugin.ide.actions.NewDemistoAutomationFile"
+                text="New Demisto Automation" description="Creates new Demisto automation" icon="AllIcons.FileTypes.Text">
+            <add-to-group group-id="FileOpenGroup" anchor="first"/>
+        </action>
+        <action id="newDemistoIntegrationFile" class="com.demisto.plugin.ide.actions.NewDemistoIntegrationFile"
+                text="New Demisto Integration" description="Creates new Demisto integration" icon="AllIcons.FileTypes.Text">
+            <add-to-group group-id="FileOpenGroup" anchor="after" relative-to-action="newDemistoAutomationFile"/>
+        </action>
+        <action id="openDemistoFile" class="com.demisto.plugin.ide.actions.OpenDemistoFile"
+                text="Open Demisto Configuration" description="Open existing Demisto configuration file" icon="AllIcons.Actions.Menu_open">
+            <add-to-group group-id="FileOpenGroup" anchor="after" relative-to-action="newDemistoIntegrationFile"/>
+        </action>
+    </actions>
+</idea-plugin>

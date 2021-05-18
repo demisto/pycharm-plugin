@@ -1,0 +1,57 @@
+commonfields:
+  id: VirusTotal
+  version: -1
+name: VirusTotal
+display: VirusTotal
+category: Data Enrichment & Threat Intelligence
+image: data:image/png;base64,iVBORw0K
+description: Analyze suspicious hashes, URLs, domains and IP addresses
+detaileddescription: |-
+  Indicators thresholds
+configuration:
+- display: Virus Total private API key
+  name: APIKey
+  defaultvalue: ""
+  type: 4
+  required: true
+- display: Use system proxy settings
+  name: useProxy
+  defaultvalue: "true"
+  type: 8
+  required: false
+- display: Trust any certificate (unsecure)
+  name: insecure
+  defaultvalue: "false"
+  type: 8
+  required: false
+script:
+  script: |
+    import requests
+  type: python
+  commands:
+  - name: vt-private-check-file-behaviour
+    arguments:
+    - name: resource
+      required: true
+      description: The md5/sha1/sha256 hash of the file whose dynamic behavioural
+        report you want to retrieve.
+    - name: threshold
+      description: If the number of positives is bigger than the threshold the file
+        will be considered malicious. If threshold is not specified, the default file
+        threshold, as configured in the instance settings, will be used.
+    - name: fullResponse
+      auto: PREDEFINED
+      predefined:
+      - "true"
+      - "false"
+      description: Return all of the results, note that it can be thousands of results.
+        Prefer not to use in playbooks. The default value is "false"
+      defaultValue: "false"
+    outputs:
+    - contextPath: FileMD5
+      description: File's MD5
+      type: string
+    - contextPath: File.VirusTotal.RelatedDomains
+      description: Domains that the hash communicates with
+    description: 'VirusTotal'
+  runonce: false

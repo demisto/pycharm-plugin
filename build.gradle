@@ -1,0 +1,123 @@
+plugins {
+    id 'java'
+    id "org.jetbrains.intellij" version "0.7.2"
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
+apply plugin: 'org.jetbrains.intellij'
+
+group 'com.demisto'
+version '0.9.8.5'
+
+sourceCompatibility = 1.8
+targetCompatibility = 10.0
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.25'
+    implementation group: 'org.json', name: 'json', version: '20210307'
+    implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation("org.assertj:assertj-core:2.9.1")
+    testImplementation group: 'org.assertj', name: 'assertj-swing-junit', version: '3.8.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.9.0'
+}
+
+// If one needs to set a pycharm env - comment the coverage and the java plugins lines and uncomment the type 'PC' line.
+intellij {
+    version '2020.2.3'
+//    type 'PC'
+    sandboxDirectory = "$project.buildDir/myCustom-sandbox"
+    pluginName 'Demisto PyCharm Plugin'
+    plugins 'coverage'
+    plugins 'java'
+}
+
+patchPluginXml {
+    changeNotes """
+<ul>
+    <li>Added the "Beta Integration" checkbox. </li>
+    <li>Fixed an issue where "Run on a separate container" checkbox did not work. </li>
+    <li>Fixed an issue where the defaultmappersin/out names. </li>
+    <li>Updated YAML and JSON parsers. </li>
+</ul>
+"""
+    sinceBuild "182.711"
+    untilBuild "202.*"
+}
+
+test {
+    useJUnit{
+        includeCategories 'com.demisto.plugin.ide.DemistoYML'
+        excludeCategories 'org.assertj.swing.annotation.GUITest'
+    }
+    testLogging {
+        events 'PASSED', 'FAILED', 'SKIPPED'
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nUnit Test result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
+}
+
+sourceSets {
+    intTest {
+        java.srcDir file('test/java/com.demisto.plugin.ide/integration')
+        resources.srcDir file('test/resources')
+        compileClasspath += sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+dependencies {
+    intTestImplementation 'junit:junit:4.12'
+}
+
+task integrationTest(type: Test) {
+    description = 'Runs GUI tests.'
+    mustRunAfter test
+    useJUnit {
+        includeCategories 'org.assertj.swing.annotation.GUITest'
+        excludeCategories 'com.demisto.plugin.ide.DemistoYML'
+    }
+    testLogging {
+        events 'PASSED', 'FAILED', 'SKIPPED'
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nGUI Test result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
+}
+
+check.dependsOn integrationTest
+
+jacoco {
+    toolVersion = "0.8.2"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+coveralls {
+    jacocoReportPath "$buildDir/customJacocoReportDir/test/jacocoTestReport.xml"
+}
