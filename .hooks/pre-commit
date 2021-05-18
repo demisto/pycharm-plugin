@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+#prevent push to master
+protected_branch='master'
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+if [ $protected_branch = $current_branch ]; then
+    echo "pushing to master is not allowed"
+    exit 1
+fi
+
+# run tests
+gradle task test
+
+exit 0
