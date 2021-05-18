@@ -22,15 +22,15 @@ jobs:
           name: Build gradle
           command: |
             gradle assemble
+      - save_cache:
+          paths:
+            - ~/pycharm-plugin/.gradle
+          key: 'gradle-{{ checksum "build.gradle" }}'
       - run:
           name: Run tests
           command: |
             gradle test
             gradle integrationTest
-      - save_cache:
-          paths:
-            - ~/pycharm-plugin/.gradle
-          key: 'gradle-{{ checksum "build.gradle" }}'
       - store_artifacts:
           path: build/distributions
           destination: distributions
