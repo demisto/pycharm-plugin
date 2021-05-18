@@ -8,4 +8,7 @@ if [ $protected_branch = $current_branch ]; then
     exit 1
 fi
 
+# run tests
+gradle task test
+
 exit 0

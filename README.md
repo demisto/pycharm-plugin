@@ -1,12 +1,12 @@
-# Demisto IntelliJ Plugin
+# Demisto Pycharm Plugin
 
 ## Installation
-    1. Download `Demisto-Plugin-XXX.zip` from this repo's directory `plugin_zips`.
-    2. Go to PyCharm/IntelliJ -> Preferences
-    3. Choose `Plugins`
-    4. Select `Install plugin from disk`
-    5. Choose `Demisto-Plugin-XXX.zip`.
-    6. `Demisto IDE Add-on` should now appear in the menu, choose the `Restart PyCharm` option
+   1. Build the plugin using gradle `gradle task buildPlugin`
+   2. Go to PyCharm/IntelliJ -> Preferences 
+   3. Choose `Plugins`
+   4. Select `Install plugin from disk`
+   5. Choose `build/distrubution/Demisto Pycharm Plugin-XXX.zip`. 
+   6. `Demisto IDE Add-on` should now appear in the menu, choose the `Restart PyCharm` option
 ## Prerequisites 
     - PyCharm, or IntelliJ with Python Community Edition (Python plugin for IntelliJ) installed. 
       Supported PyCharm/IntelliJ versions - 2018.5 onwards
@@ -76,13 +76,15 @@
    For example, `c:\Users\John\.PyCharm45\`
    
 ## Developing the Plugin Code
-To build and run the plugin following your code changes, follow these steps:
+To build and run the plugin following your code changes, you should use gradle.
 
-1. From IntelliJ, open the plugin project.
-2. Build the sources and launch the plugin by the following these steps:
-* From the *Gradle* tool window, expand *demisto-plugin --> Tasks -->  IntelliJ*
-* Run the *buildPlugin* task.
-* Run the *runIde* task.
+Build the plugin with `gradle task buildPlugin`.
+
+To Run the plugin on an IDE use `gradle task runIde`.
+
+There are two unit-test's tasks:  
+* `gradle task tests`: Runs unit tests.
+* `gradle task integrationTest`: Runs GUI tests.
 
 ## Code Contributions
 We welcome community contribution through pull requests.
