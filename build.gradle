@@ -43,7 +43,7 @@ patchPluginXml {
 <ul>
     <li>Added the "Beta Integration" checkbox. </li>
     <li>Fixed an issue where "Run on a separate container" checkbox did not work. </li>
-    <li>Fixed an issue where the defaultmappersin/out names. </li>
+    <li>Fixed an issue where the defaultmappersin/out names were incorrect. </li>
     <li>Updated YAML and JSON parsers. </li>
 </ul>
 """
