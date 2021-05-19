@@ -8,7 +8,7 @@ plugins {
 apply plugin: 'org.jetbrains.intellij'
 
 group 'com.demisto'
-version '0.9.8.5'
+version '0.9.8.6'
 
 sourceCompatibility = 1.8
 targetCompatibility = 10.0
@@ -41,10 +41,7 @@ intellij {
 patchPluginXml {
     changeNotes """
 <ul>
-    <li>Added the "Beta Integration" checkbox. </li>
-    <li>Fixed an issue where "Run on a separate container" checkbox did not work. </li>
-    <li>Fixed an issue where the defaultmappersin/out names were incorrect. </li>
-    <li>Updated YAML and JSON parsers. </li>
+    <li>Add notes here</li>
 </ul>
 """
     sinceBuild "182.711"
